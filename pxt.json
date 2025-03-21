@@ -1,0 +1,28 @@
+{
+    "name": "Futuroon Game",
+    "description": "",
+    "dependencies": {
+        "device": "*",
+        "arcade-camera-offset": "github:riknoll/arcade-camera-offset#50dcab790691a38799aa99390f9cced2d62fbc21",
+        "arcade-background-scroll": "github:microsoft/arcade-background-scroll#v0.1.2"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "assets.json",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "1.12.61",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "blocksprj"
+}
