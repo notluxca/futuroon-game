@@ -1,8 +1,318 @@
+/**
+ * Esta parte do nosso código tem a função de lidar com todos os comandos enviados pelo jogador, ou seja, processar os inputs que acontecem quando ele pressiona os botões.
+ * 
+ * Aqui, através desses inputs gerenciamos três elementos importantes:
+ * 
+ * Sistema de pulo: Controla quando e como o jogador realiza um salto.
+ * 
+ * Animações do jogador: Atualiza as animações com base nas ações realizadas, como andar, pular ou atacar.
+ * 
+ * Ataque de projétil: Define o momento em que o jogador dispara um projétil e como esse ataque se comporta.
+ */
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    projectile2 = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, Jogador, 50, 0)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
+    game.gameOver(true)
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Jogador.isHittingTile(CollisionDirection.Bottom)) {
         Jogador.vy = -200
     }
 })
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava0, function (sprite, location) {
+    game.gameOver(false)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    animation.runImageAnimation(
+    Jogador,
+    [img`
+        . . . . . f f f f f . . . 
+        . . . f f f f f f f f f . 
+        . . f f f c f f f f f f . 
+        . . f f c f f f c f f f f 
+        f f c c f f f c c f f c f 
+        f f f f f e f f f f c c f 
+        . f f f e e f f f f f f f 
+        . . f f e e f b f e e f f 
+        . . . f 4 4 f 1 e 4 e f . 
+        . . . f 4 4 4 4 e f f f . 
+        . . . f f e e e e e f . . 
+        . . . f 7 7 7 e 4 4 e . . 
+        . . . f 7 7 7 e 4 4 e . . 
+        . . . f 6 6 6 f e e f . . 
+        . . . . f f f f f f . . . 
+        . . . . . . f f f . . . . 
+        `,img`
+        . . . . . . . . . . . . . 
+        . . . . f f f f f f . . . 
+        . . . f f f f f f f f f . 
+        . . f f f c f f f f f f . 
+        . f f f c f f f c f f f f 
+        f f c c f f f c c f f c f 
+        f f f f f e f f f f c c f 
+        . f f f e e f f f f f f f 
+        . . f f e e f b f e e f f 
+        . . f f 4 4 f 1 e 4 e f . 
+        . . . f 4 4 4 e e f f f . 
+        . . . f f e e 4 4 e f . . 
+        . . . f 7 7 e 4 4 e f . . 
+        . . f f 6 6 f e e f f f . 
+        . . f f f f f f f f f f . 
+        . . . f f f . . . f f . . 
+        `],
+    100,
+    true
+    )
+})
+controller.right.onEvent(ControllerButtonEvent.Released, function () {
+    animation.stopAnimation(animation.AnimationTypes.All, Jogador)
+    animation.runImageAnimation(
+    Jogador,
+    [img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        f e f b 7 7 7 7 b f e f . 
+        e 4 f 7 7 7 7 7 7 f 4 e . 
+        e e f 6 6 6 6 6 6 f e e . 
+        . . . f f f f f f . . . . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        . . f b 7 7 7 7 b f . . . 
+        f e f 7 7 7 7 7 7 f e f . 
+        e 4 f 6 6 6 6 6 6 f 4 e . 
+        e e . f f f f f f . e e . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . . . . . . . . . . 
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        f e f 7 7 7 7 7 7 f e f . 
+        e 4 f 6 6 6 6 6 6 f 4 e . 
+        e e . f f f f f f . e e . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        . . f b 7 7 7 7 b f . . . 
+        f e f 7 7 7 7 7 7 f e f . 
+        e 4 f 6 6 6 6 6 6 f 4 e . 
+        e e . f f f f f f . e e . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        f e f b 7 7 7 7 b f e f . 
+        e 4 f 7 7 7 7 7 7 f 4 e . 
+        e e f 6 6 6 6 6 6 f e e . 
+        . . . f f f f f f . . . . 
+        . . . f f . . f f . . . . 
+        `],
+    100,
+    true
+    )
+})
+controller.left.onEvent(ControllerButtonEvent.Released, function () {
+    animation.stopAnimation(animation.AnimationTypes.All, Jogador)
+    animation.runImageAnimation(
+    Jogador,
+    [img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        f e f b 7 7 7 7 b f e f . 
+        e 4 f 7 7 7 7 7 7 f 4 e . 
+        e e f 6 6 6 6 6 6 f e e . 
+        . . . f f f f f f . . . . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        . . f b 7 7 7 7 b f . . . 
+        f e f 7 7 7 7 7 7 f e f . 
+        e 4 f 6 6 6 6 6 6 f 4 e . 
+        e e . f f f f f f . e e . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . . . . . . . . . . 
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        f e f 7 7 7 7 7 7 f e f . 
+        e 4 f 6 6 6 6 6 6 f 4 e . 
+        e e . f f f f f f . e e . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        . . f b 7 7 7 7 b f . . . 
+        f e f 7 7 7 7 7 7 f e f . 
+        e 4 f 6 6 6 6 6 6 f 4 e . 
+        e e . f f f f f f . e e . 
+        . . . f f . . f f . . . . 
+        `,img`
+        . . . . f f f f . . . . . 
+        . . f f f f f f f f . . . 
+        . f f f f f f c f f f . . 
+        f f f f f f c c f f f c . 
+        f f f c f f f f f f f c . 
+        c c c f f f e e f f c c . 
+        f f f f f e e f f c c f . 
+        f f f b f e e f b f f f . 
+        . f 4 1 f 4 4 f 1 4 f . . 
+        . f e 4 4 4 4 4 4 e f . . 
+        . f f f e e e e f f f . . 
+        f e f b 7 7 7 7 b f e f . 
+        e 4 f 7 7 7 7 7 7 f 4 e . 
+        e e f 6 6 6 6 6 6 f e e . 
+        . . . f f f f f f . . . . 
+        . . . f f . . f f . . . . 
+        `],
+    100,
+    true
+    )
+})
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    animation.runImageAnimation(
+    Jogador,
+    [img`
+        . . . f f f f f . . . . . . . . 
+        . f f f f f f f f f . . . . . . 
+        . f f f f f f c f f f . . . . . 
+        f f f f c f f f c f f . . . . . 
+        f c f f c c f f f c c f f . . . 
+        f c c f f f f e f f f f f . . . 
+        f f f f f f f e e f f f . . . . 
+        f f e e f b f e e f f . . . . . 
+        . f e 4 e 1 f 4 4 f . . . . . . 
+        . f f f e 4 4 4 4 f . . . . . . 
+        . . f e e e e e f f . . . . . . 
+        . . e 4 4 e 7 7 7 f . . . . . . 
+        . . e 4 4 e 7 7 7 f . . . . . . 
+        . . f e e f 6 6 6 f . . . . . . 
+        . . . f f f f f f . . . . . . . 
+        . . . . f f f . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . f f f f f f . . . . . . . 
+        . f f f f f f f f f . . . . . . 
+        . f f f f f f c f f f . . . . . 
+        f f f f c f f f c f f f . . . . 
+        f c f f c c f f f c c f f . . . 
+        f c c f f f f e f f f f f . . . 
+        f f f f f f f e e f f f . . . . 
+        f f e e f b f e e f f . . . . . 
+        . f e 4 e 1 f 4 4 f f . . . . . 
+        . f f f e e 4 4 4 f . . . . . . 
+        . . f e 4 4 e e f f . . . . . . 
+        . . f e 4 4 e 7 7 f . . . . . . 
+        . f f f e e f 6 6 f f . . . . . 
+        . f f f f f f f f f f . . . . . 
+        . . f f . . . f f f . . . . . . 
+        `],
+    100,
+    true
+    )
+})
+let projectile2: Sprite = null
 let Jogador: Sprite = null
 scroller.setLayerImage(scroller.BackgroundLayer.Layer0, img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -126,130 +436,8 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer0, img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
-scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ................................................................................................................................................................
-    ..ccc.........ccc...................................................................................cc..........ccc.............................................
-    ..ccc.........ccc...................................................................................cc..........ccc.............................................
-    ..ccc.........ccc...................................................................................cc..........ccc..ccc.........ccc............................
-    ccccccc......ccccc................................................................................cccc.........ccccc.ccc.........ccc............................
-    ccccccc......ccccc...........................................cccccccccc...........................ccccccc......ccccccccccc......ccccc...........................
-    ccccccc......ccccc...........................................cccccccccc...........................ccccccc......ccccccccccc......ccccc...........................
-    ccccccc......ccccc...........................................cccccccccc...........................ccccccc......ccccccccccc......ccccc...........................
-    cddcccc.....ccccccc....................cc....................ccdcdccccc...........................ccccccc.....cccccccccccc......ccccc...........................
-    ccccccc.....ccccccc...................cccc...................ccccccddcc...........................ccccccc.....ccccccddcccc.....ccccccc....................cc....
-    cdccccc.....ccccccc.................cccccc...................cccccccccc...................cccc....cccdccc.....cccccccccccc.....ccccccc...................cccc...
-    ccccccc.....ccccccc.................cccdcd.....cc............ccccdccccc........cc.........cccc....cccdccc.....ccccccdccccc.....ccccccc.................cccccc...
-    ccccccc.....ccccccc.................cccdcd.....cc............ccccdccccc........cc.........cccc....cccdccc.....ccccccdccccc.....ccccccc.................cccccc...
-    ccccccc.....ccccccc.................cccccc.....cc............cccccccdcc........cc........cccccc...ccccccc.....cccccccccccc.....ccccccc.................cccdcd...
-    ccccccc.....ccccccc.........cc......cccdcd....ccc............cccccccccc.ccccccccc........cccccc...cccdccc.....cccccccccccc.....ccccccc.................cccccc...
-    ccccccc...cccccccccc.cc....cccccccccccccdc....cccc...........ccccccddcc.cddcccccc........cccccc...ccccccc...cccccccccccccc.....ccccccc.........cc......cccdcd...
-    ccdcccc...ccccccccccccc....ccdcccdcccccccc....cccc...........cccccccccc.ccccdcccc........ccccccc..ccccdcc...cccccccccccccc...cccccccccc.cc....cccccccccccccdc...
-    ccdcccc...ccccccccccccc....ccdcccdcccccccc....cccc...........cccccccccc.ccccdcccc........ccccccc..ccccdcc...cccccccccccccc...cccccccccc.cc....cccccccccccccdc...
-    ccccccc...cccccccccccdc....ccccdcddccccccc....cccc...........cccccccccc.ccccdcccc........ccccccc..ccccccc...cccccccccdcccc...ccccccccccccc....ccdcccdcccccccc...
-    ccccccc...ccccccccccccc....ccccccccccccccc...cccccc........cccccccccccc.cddcccccc........ccccccc..ccccccc...cccccccccccccc...cccccccccccdc....ccccdcddccccccc...
-    ccccccc...cccccccccccdc....cccccccccccccccc..cccccc....cccccccccccccccc.ccccccccc.....c..ccccccc..ccccccc...cccccccccccccc...ccccccccccccc....ccccccccccccccc...
-    ccccccc...ccccccccccccc...cccdccccccccccccc..ccccccc...dcddccccccccccccccddcdcccc.cc.ccc.ccccccc..ccccccc...cccccccccccccc...cccccccccccdc....cccccccccccccccc..
-    ccccccc...ccccccccccccc...cccdccccccccccccc..ccccccc...dcddccccccccccccccddcdcccc.cc.ccc.ccccccc..ccccccc...cccccccccccccc...cccccccccccdc....cccccccccccccccc..
-    ccccccc...cccccccccccccc..cccccccccccccccccccccccccc..ccccccccccccccccccccccccccc.cc.ccccccccccc..ccccdcc...cccccccccccccc...ccccccccccccc...cccdccccccccccccc..
-    ccccccc...cccccccccccccc..cccccccccccccccccccccccccc..ccccccccccccccccccccccccccccccccccccccccccccccccccc...cccccccccccccc...cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.cccccccccccccc..cccccccccccccccccccccccccc..cdcccccccccccccccccccccccccccccccccccccccccccccccccc..cccccccccccccc...cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.cccccccccccccc..cccccccccccccccccccccccccc..ccccccccccccccccccccccccccccccccdccccccccccccccccccc..cccccccccccccccc.cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.cccccccccccccc..cccccccccccccccccccccccccc..ccccccccccccccccccccccccccccccccdccccccccccccccccccc..cccccccccccccccc.cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.cccccccccccccc..cccccccccccccccccccccccccc..cccccccccccccccccccccccccccccccccccccccccccccccccccc..cccccccccccccccc.cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.cccccccccccccc..cccccccccccccccccccccccccc..cccccccccccccccccccccccccccddcdcdccccccccccccccccccccccccccccccccccccc.cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.ccccccccccccccc.cccccccccccccccccccccccccc..ccccccccccccccccccccccccccccccdcdccccccccccccccccccccccccccccccccccccc.cccccccccccccc..ccccccccccccccccccc
-    ccccccccc.ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccdccccdcccccccccccccccccccccccccccccccc.ccccccccccccccc.ccccccccccccccccccc
-    ccccccccc.ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccdccccdcccccccccccccccccccccccccccccccc.ccccccccccccccc.ccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.ccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-    `)
 scroller.scrollBackgroundWithCamera(scroller.CameraScrollMode.OnlyHorizontal, scroller.BackgroundLayer.Layer0)
-scroller.setCameraScrollingMultipliers(1.1, 0, scroller.BackgroundLayer.Layer1)
+scroller.setCameraScrollingMultipliers(0.5, 0, scroller.BackgroundLayer.Layer0)
 tiles.setCurrentTilemap(tilemap`level2`)
 Jogador = sprites.create(img`
     . . . f f f f f . . . . . 
@@ -272,3 +460,94 @@ Jogador = sprites.create(img`
 controller.moveSprite(Jogador, 100, 0)
 Jogador.ay = 1200
 cameraOffsetScene.cameraFollowWithOffset(Jogador, 0, -20)
+animation.runImageAnimation(
+Jogador,
+[img`
+    . . . . f f f f . . . . . 
+    . . f f f f f f f f . . . 
+    . f f f f f f c f f f . . 
+    f f f f f f c c f f f c . 
+    f f f c f f f f f f f c . 
+    c c c f f f e e f f c c . 
+    f f f f f e e f f c c f . 
+    f f f b f e e f b f f f . 
+    . f 4 1 f 4 4 f 1 4 f . . 
+    . f e 4 4 4 4 4 4 e f . . 
+    . f f f e e e e f f f . . 
+    f e f b 7 7 7 7 b f e f . 
+    e 4 f 7 7 7 7 7 7 f 4 e . 
+    e e f 6 6 6 6 6 6 f e e . 
+    . . . f f f f f f . . . . 
+    . . . f f . . f f . . . . 
+    `,img`
+    . . . . f f f f . . . . . 
+    . . f f f f f f f f . . . 
+    . f f f f f f c f f f . . 
+    f f f f f f c c f f f c . 
+    f f f c f f f f f f f c . 
+    c c c f f f e e f f c c . 
+    f f f f f e e f f c c f . 
+    f f f b f e e f b f f f . 
+    . f 4 1 f 4 4 f 1 4 f . . 
+    . f e 4 4 4 4 4 4 e f . . 
+    . f f f e e e e f f f . . 
+    . . f b 7 7 7 7 b f . . . 
+    f e f 7 7 7 7 7 7 f e f . 
+    e 4 f 6 6 6 6 6 6 f 4 e . 
+    e e . f f f f f f . e e . 
+    . . . f f . . f f . . . . 
+    `,img`
+    . . . . . . . . . . . . . 
+    . . . . f f f f . . . . . 
+    . . f f f f f f f f . . . 
+    . f f f f f f c f f f . . 
+    f f f f f f c c f f f c . 
+    f f f c f f f f f f f c . 
+    c c c f f f e e f f c c . 
+    f f f f f e e f f c c f . 
+    f f f b f e e f b f f f . 
+    . f 4 1 f 4 4 f 1 4 f . . 
+    . f e 4 4 4 4 4 4 e f . . 
+    . f f f e e e e f f f . . 
+    f e f 7 7 7 7 7 7 f e f . 
+    e 4 f 6 6 6 6 6 6 f 4 e . 
+    e e . f f f f f f . e e . 
+    . . . f f . . f f . . . . 
+    `,img`
+    . . . . f f f f . . . . . 
+    . . f f f f f f f f . . . 
+    . f f f f f f c f f f . . 
+    f f f f f f c c f f f c . 
+    f f f c f f f f f f f c . 
+    c c c f f f e e f f c c . 
+    f f f f f e e f f c c f . 
+    f f f b f e e f b f f f . 
+    . f 4 1 f 4 4 f 1 4 f . . 
+    . f e 4 4 4 4 4 4 e f . . 
+    . f f f e e e e f f f . . 
+    . . f b 7 7 7 7 b f . . . 
+    f e f 7 7 7 7 7 7 f e f . 
+    e 4 f 6 6 6 6 6 6 f 4 e . 
+    e e . f f f f f f . e e . 
+    . . . f f . . f f . . . . 
+    `,img`
+    . . . . f f f f . . . . . 
+    . . f f f f f f f f . . . 
+    . f f f f f f c f f f . . 
+    f f f f f f c c f f f c . 
+    f f f c f f f f f f f c . 
+    c c c f f f e e f f c c . 
+    f f f f f e e f f c c f . 
+    f f f b f e e f b f f f . 
+    . f 4 1 f 4 4 f 1 4 f . . 
+    . f e 4 4 4 4 4 4 e f . . 
+    . f f f e e e e f f f . . 
+    f e f b 7 7 7 7 b f e f . 
+    e 4 f 7 7 7 7 7 7 f 4 e . 
+    e e f 6 6 6 6 6 6 f e e . 
+    . . . f f f f f f . . . . 
+    . . . f f . . f f . . . . 
+    `],
+100,
+true
+)
