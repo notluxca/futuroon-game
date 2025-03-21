@@ -10,24 +10,45 @@
  * Ataque de projétil: Define o momento em que o jogador dispara um projétil e como esse ataque se comporta.
  */
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    projectile2 = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, Jogador, 50, 0)
+    if (DireçãoProjetil == 1) {
+        projectile2 = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . c c . . . . . . 
+            . . . . . c a a a a . . . . . . 
+            . . . . . a a f f b a . . . . . 
+            . . . . c a b f f c b . . . . . 
+            . . . . c b b b a f c b . . . . 
+            . . . . c b a c a b b b . . . . 
+            . . . . . b b f f a a c . . . . 
+            . . . . . . a a b b c . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, Jogador, 200, 0)
+    } else {
+        projectile2 = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . c c c . . . . . . 
+            . . . . . . a b a a . . . . . . 
+            . . . . . c b a f c a c . . . . 
+            . . . . c b b b f f a c c . . . 
+            . . . . b b f a b b a a c . . . 
+            . . . . c b f f b a f c a . . . 
+            . . . . . c a a c b b a . . . . 
+            . . . . . . c c c c . . . . . . 
+            . . . . . . . c . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, Jogador, -200, 0)
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     game.gameOver(true)
@@ -41,6 +62,7 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava0, function (sp
     game.gameOver(false)
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    DireçãoProjetil = 0
     animation.runImageAnimation(
     Jogador,
     [img`
@@ -271,6 +293,7 @@ controller.left.onEvent(ControllerButtonEvent.Released, function () {
     )
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    DireçãoProjetil = 1
     animation.runImageAnimation(
     Jogador,
     [img`
@@ -313,6 +336,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     )
 })
 let projectile2: Sprite = null
+let DireçãoProjetil = 0
 let Jogador: Sprite = null
 scroller.setLayerImage(scroller.BackgroundLayer.Layer0, img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
