@@ -1,7 +1,4 @@
 /**
- * Aqui temos  a parte inicial do jogo.
- */
-/**
  * Esta parte do nosso código tem a função de lidar com todos os comandos enviados pelo jogador, ou seja, processar os inputs que acontecem quando ele pressiona os botões.
  * 
  * Aqui, através desses inputs gerenciamos três elementos importantes:
@@ -12,6 +9,12 @@
  * 
  * Ataque de projétil: Define o momento em que o jogador dispara um projétil e como esse ataque se comporta.
  */
+/**
+ * Aqui gerenciamos todas as colisões do jogo
+ */
+/**
+ * Aqui temos  a parte inicial do jogo.
+ */
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (DireçãoProjetil == 1) {
         projectile2 = sprites.createProjectileFromSprite(img`
@@ -20,15 +23,15 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
+            . . . . . . . 2 2 . . . . . . . 
+            . . . . . . 3 1 1 3 . . . . . . 
+            . . . . . 2 1 1 1 1 2 . . . . . 
+            . . . . . 2 1 1 1 1 2 . . . . . 
+            . . . . . . 3 1 1 3 . . . . . . 
+            . . . . . . . 2 2 . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . . c c . . . . . . 
-            . . . . . c a a a a . . . . . . 
-            . . . . . a a f f b a . . . . . 
-            . . . . c a b f f c b . . . . . 
-            . . . . c b b b a f c b . . . . 
-            . . . . c b a c a b b b . . . . 
-            . . . . . b b f f a a c . . . . 
-            . . . . . . a a b b c . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             `, Jogador, 200, 0)
@@ -39,19 +42,22 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . c c c . . . . . . 
-            . . . . . . a b a a . . . . . . 
-            . . . . . c b a f c a c . . . . 
-            . . . . c b b b f f a c c . . . 
-            . . . . b b f a b b a a c . . . 
-            . . . . c b f f b a f c a . . . 
-            . . . . . c a a c b b a . . . . 
-            . . . . . . c c c c . . . . . . 
-            . . . . . . . c . . . . . . . . 
+            . . . . . . . 2 2 . . . . . . . 
+            . . . . . . 3 1 1 3 . . . . . . 
+            . . . . . 2 1 1 1 1 2 . . . . . 
+            . . . . . 2 1 1 1 1 2 . . . . . 
+            . . . . . . 3 1 1 3 . . . . . . 
+            . . . . . . . 2 2 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             `, Jogador, -200, 0)
     }
+})
+scene.onOverlapTile(SpriteKind.Player, myTiles.tile28, function (sprite, location) {
+    game.gameOver(true)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Jogador.isHittingTile(CollisionDirection.Bottom)) {
@@ -333,10 +339,10 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     )
 })
 scene.onOverlapTile(SpriteKind.Player, myTiles.tile15, function (sprite, location) {
-    game.gameOver(false)
+    Morrer()
 })
 scene.onOverlapTile(SpriteKind.Player, myTiles.tile17, function (sprite, location) {
-    game.gameOver(false)
+    Morrer()
 })
 function CreateEnemy () {
     Inimigo = sprites.create(img`
@@ -395,11 +401,25 @@ function CreateEnemy () {
         . . c 6 1 1 1 1 1 7 6 6 c c . . 
         . . . c c c c c c c c c c . . . 
         `],
-    500,
+    200,
     true
     )
     Inimigo.setVelocity(-50, 0)
     Inimigo.ay = 1200
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprites.destroy(otherSprite, effects.fire, 500)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    Morrer()
+})
+function Morrer () {
+    music.play(music.createSoundEffect(WaveShape.Square, 200, 1, 255, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.UntilDone)
+    Jogador.vy = -180
+    sprites.destroy(Jogador, effects.fire, 1000)
+    timer.after(500, function () {
+        game.gameOver(false)
+    })
 }
 let Inimigo: Sprite = null
 let projectile2: Sprite = null
@@ -584,26 +604,26 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
     .........................................bbbbbbb.......bbbb...............................................................................bbbbbbb.....bbbbb.....
     .....bbbbbbbbb...........................bbbbbbb......bbbbb..........................................bbbbbbbbbb...........................bbbbbbb.....bbbbb.....
     .....bbbbbbbbb...........................bbbbbbb......bbbbb..........................................bbbbbbbbbb...........................bbbbbbb.....bbbbb.....
-    .....bddbbbbbb...........................bddbbbb.....bbbbbbb....................bb...................bbdbdbbbbb...........................bbbbbbb....bbbbbb.....
-    .....bbbbbbbdb...........................bbbbbbb.....bbbbbbb...................bbbb..................bbbbbbddbb...........................bbbbbbb....bbbbbbbb...
-    .....bbbbbbbbb..........b........bbbbb...bdbbbbb.....bbbbbbb.................bbbbbb..................bbbbbbbbbb...................bbbb....bbbdbbb....bbbbbbbb...
-    .....bbbbbbbbb.........bb........bbbbb...bbbbbbb.....bbbbbbb.................bbbdbd.....bb...........bbbbdbbbbb........bb.........bbbb....bbbdbbb....bbbbbbbb...
-    .....bbbbbbbdb.........bb........bbbbb...bbbbbbb.....bbbbbbb.................bbbbbb.....bb...........bbbbbbbdbb........bb........bbbbbb...bbbbbbb....bbbbbbbb...
-    .....bbbbbbbbb..bbbbbb.bb........bbbbb...bbbbbbb.....bbbbbbb.........bb......bbbdbd....bbb...........bbbbbbbbbb..bbbbbbbb........bbbbbb...bbbdbbb....bbbbbbbb...
-    .....bbbbbbbdb..bddbbb.bb........dbbdb...bbbbbbb...bbbbbbbbbbdbb.....bbbbbbbbbbbbdb....bbbb..........bbbbbbddbb..ddbbbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
-    .....bbbbbbbbb..bbbbdb.bb........bbbbbb..bbdbbbb...bbbbbbbbbbbbb....bbdbbbdbbbbbbbb....bbbb..........bbbbbbbbbb.bbbbdbbbb........bbbbbbb..bbbbdbb..bbbbbbbbbbbbb
-    .....bbbbbbbbb..bbbbdbbbb........bbbbbb..bbbbbbb...bbbbbbbbbbbdb....bbbbdbddbbbbbbb....bbbb..........bbbbbbbbbb.bbbbdbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
-    .bb.bbbbbbbbbbb.bddbbbbbb........bbbbbb..bbbbbbb...bbbbbbbbbbbbb....bbbbbbbbbbbbbbbb..bbbbbb...bddbbbbbbbbbbbbb.bddbbbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
-    bbbbbbbbbbbbbbb.bbbbbbbbb..b..b..bbbbbb..bbbbbbb...bbbbbbbbbbbdb....bbbbbbbbbbbbbbbb..bbbbbb...bbbbbbbbbbbbbbbb.bbbbbbbbb.....b..bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
-    bbddbbbbbbbbbbbbbddddbbbbbbb.bbb.dbbdbb..bbbbbbb...bbbbbbbbbbbbbbb.bbbdbbbbbbbbbbbbb..bbbbbbb..dbddbbbbbbbbbbbbbbddbdbbbb.bb.bbb.bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbb.bbbbbb..bbbbbbb...bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbb.bb.bbbbbbbbbbb..bbbbdbb..bbbbbbbbbbbbb
+    .....bbbbbbbbb...........................bbbbbbb.....bbbbbbb....................bb...................bbbbbbbbbb...........................bbbbbbb....bbbbbb.....
+    .....bbbbbbbbb...........................bbbbbbb.....bbbbbbb...................bbbb..................bbbbbbbbbb...........................bbbbbbb....bbbbbbbb...
+    .....bbbbbbbbb..........b........bbbbb...bbbbbbb.....bbbbbbb.................bbbbbb..................bbbbbbbbbb...................bbbb....bbbbbbb....bbbbbbbb...
+    .....bbbbbbbbb.........bb........bbbbb...bbbbbbb.....bbbbbbb.................bbbbbb.....bb...........bbbbbbbbbb........bb.........bbbb....bbbbbbb....bbbbbbbb...
+    .....bbbbbbbbb.........bb........bbbbb...bbbbbbb.....bbbbbbbbbb..............bbbbbb.....bb...........bbbbbbbbbb........bb........bbbbbb...bbbbbbb....bbbbbbbb...
+    .....bbbbbbbbb..bbbbbb.bb........bbbbb...bbbbbbb.....bbbbbbbbbb......bb......bbbbbb....bbb...........bbbbbbbbbb..bbbbbbbb........bbbbbb...bbbbbbb....bbbbbbbb...
+    .....bbbbbbbbb..bbbbbb.bb........bbbbb...bbbbbbb...bbbbbbbbbbbbb.....bbbbbbbbbbbbbb....bbbb..........bbbbbbbbbb..bbbbbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
+    .....bbbbbbbbb..bbbbbb.bb........bbbbbb..bbbbbbb...bbbbbbbbbbbbb....bbbbbbbbbbbbbbb....bbbb..........bbbbbbbbbb.bbbbbbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
+    .....bbbbbbbbb..bbbbbbbbb........bbbbbb..bbbbbbb...bbbbbbbbbbbbb....bbbbbbbbbbbbbbb....bbbb..........bbbbbbbbbb.bbbbbbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
+    .bb.bbbbbbbbbbb.bbbbbbbbb........bbbbbb..bbbbbbb...bbbbbbbbbbbbb....bbbbbbbbbbbbbbbb..bbbbbb...bbbbbbbbbbbbbbbb.bbbbbbbbb........bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
+    bbbbbbbbbbbbbbb.bbbbbbbbb..b..b..bbbbbb..bbbbbbb...bbbbbbbbbbbbb....bbbbbbbbbbbbbbbb..bbbbbb..bbbbbbbbbbbbbbbbb.bbbbbbbbb.....b..bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbb.bbbbbb..bbbbbbb...bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbb..bbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbb.bb.bbb.bbbbbbb..bbbbbbb..bbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbb.bbbbbb..bbbbbbb...bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbb.bb.bbbbbbbbbbb..bbbbbbb..bbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb..bbbbbbbbbbbbb
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbb
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbdbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbb
-    bbbbbbbbbbbbbbbbbbbbbbbbbbdddbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbddbdbdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbddbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbdbdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbdbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbdbbbbdbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
@@ -649,8 +669,132 @@ scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
+scroller.setLayerImage(scroller.BackgroundLayer.Layer2, img`
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    ................................................................................................................................................................
+    .......................................................cc....................................................................................c.........ccc......
+    ...........................................ccc.........ccc..................................................................................cc.........ccc......
+    ...........................................ccc.........ccc..................................................................................cc.........ccc......
+    .........................................ccccccc.......cccc...............................................................................ccccccc.....ccccc.....
+    .....ccccccccc...........................ccccccc......ccccc..........................................cccccccccc...........................ccccccc.....ccc1c.....
+    .....ccccccccc...........................ccccccc......ccccc..........................................cccccccccc...........................ccccccc.....ccccc.....
+    .....c11cccccc...........................c11cccc.....ccccccc....................cc...................cc1c1ccccc...........................ccccccc....cccccc.....
+    .....ccccccc1c...........................ccccccc.....ccc11cc...................cccc..................cccccc11cc...........................ccccccc....cccccccc...
+    .....ccccccccc..........c........ccccc...c1ccccc.....ccccccc.................cccccc..................cccccccccc...................cccc....ccc1ccc....cccccccc...
+    .....ccccccccc.........cc........ccccc...ccccccc.....c1ccccc.................ccc1c1.....cc...........cccc1ccccc........cc.........cccc....ccc1ccc....cccccccc...
+    .....ccccccc1c.........cc........ccccc...ccccccc.....ccccccc.................cccccc.....cc...........ccccccc1cc........cc........cccccc...ccccccc....c111cccc...
+    .....ccccccccc..cccccc.cc........ccccc...ccccccc.....ccccccc.........cc......ccc1c1....ccc...........cccccccccc..cccccccc........cccccc...ccc1ccc....cccccccc...
+    .....ccccccc1c..c11ccc.cc........1cc1c...ccccccc...cccccccccc1cc.....cccccccccccc1c....cccc..........cccccc11cc..11cccccc........ccc1ccc..ccccccc..ccccccccccccc
+    .....ccccccccc..cccc1c.cc........cccccc..cc1cccc...ccccccccccccc....cc1ccc1cccccccc....cccc..........cccccccccc.cccc1cccc........c1ccccc..cccc1cc..ccc1c1ccccccc
+    .....ccccccccc..cccc1cccc........cccccc..ccccccc...ccccccccccc1c....cccc1c11ccccccc....cccc..........cccccccccc.cccc1cccc........ccccccc..ccccccc..ccccccccccccc
+    .cc.ccccccccccc.c11cccccc........cccccc..ccccccc...cccccc1cccccc....cccccccccccccccc..cccccc...c11ccccccccccccc.c11cccccc........ccccccc..ccccccc..c1ccccccccccc
+    ccccccccccccccc.ccccccccc..c..c..cccccc..ccccccc...ccccccccccc1c....cccccccccccccccc..cccccc...cccccccccccccccc.ccccccccc.....c..ccccccc..ccccccc..ccccccccccccc
+    cc11ccccccccccccc1111ccccccc.ccc.1cc1cc..ccccccc...ccccccccccccccc.ccc1ccccccccccccc..ccccccc..1c11cccccccccccccc11c1cccc.cc.ccc.ccccccc..ccccccc..ccccccccccccc
+    cccccccccccccccccccccccccccc.ccc.cccccc..ccccccc...ccccccccccccccc.cccccccccccccccccccccccccc.ccccccccccccccccccccccccccc.cc.ccccccccccc..cccc1cc..ccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccc...ccccccccccccccc.cccccccccccccccccccccccccc.ccccccccccccccccccccccccccccccccccccccccccccccccccc..ccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccc.ccccccccccccccc.cccccccccccccccccccccccccc.c1cccccccccccccccccccccccccccccccccccccccccccccccccc.ccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccc.ccccccccccccccc.cccccccccccccccccccccccccc.cccccccccccccccccccccccccccccccc1ccccccccccccccccccc.ccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccc.ccccccccccccccc.cccccccccccccccccccccccccc.cccccccccccccccccccccccccccccccccccccccccccccccccccc.ccccccccccccc
+    cccccccccccccccccccccccccc111ccccccccccccccccccccc.ccccccccccccccc.cccccccccccccccccccccccccc.ccccccccccccccccccccccccccc11c1c1ccccccccccccccccccccccccccccccccc
+    ccccccccccccccccccccccccccc11ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc1c1ccccccccccccccccccccccccccccccccc
+    ccccccccccccccccccccccccccccccccccc1cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc1cccc1cccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+    `)
 scroller.scrollBackgroundWithCamera(scroller.CameraScrollMode.OnlyHorizontal, scroller.BackgroundLayer.Layer1)
-scroller.setCameraScrollingMultipliers(0.3, 0.3, scroller.BackgroundLayer.Layer1)
+scroller.setCameraScrollingMultipliers(0.3, 0, scroller.BackgroundLayer.Layer1)
+scroller.scrollBackgroundWithCamera(scroller.CameraScrollMode.OnlyHorizontal, scroller.BackgroundLayer.Layer2)
+scroller.setCameraScrollingMultipliers(0.4, 0, scroller.BackgroundLayer.Layer2)
 tiles.setCurrentTilemap(tilemap`level2`)
 Jogador = sprites.create(img`
     . . . f f f f f . . . . . 
@@ -670,9 +814,10 @@ Jogador = sprites.create(img`
     . . . f f f f f f . . . . 
     . . . . f f f . . . . . . 
     `, SpriteKind.Player)
-controller.moveSprite(Jogador, 100, 0)
+controller.moveSprite(Jogador, 90, 0)
+Jogador.setPosition(106, 120)
 Jogador.ay = 1200
-cameraOffsetScene.cameraFollowWithOffset(Jogador, 0, -20)
+cameraOffsetScene.cameraFollowWithOffset(Jogador, 0, -15)
 animation.runImageAnimation(
 Jogador,
 [img`
@@ -765,9 +910,6 @@ Jogador,
 true
 )
 CreateEnemy()
-/**
- * Aqui gerenciamos todas as colisões do jogo
- */
 game.onUpdate(function () {
     if (Inimigo.isHittingTile(CollisionDirection.Right)) {
         Inimigo.setVelocity(-50, 0)
@@ -808,7 +950,7 @@ game.onUpdate(function () {
             . . c 6 1 1 1 1 1 7 6 6 c c . . 
             . . . c c c c c c c c c c . . . 
             `],
-        500,
+        200,
         true
         )
     } else if (Inimigo.isHittingTile(CollisionDirection.Left)) {
@@ -850,7 +992,7 @@ game.onUpdate(function () {
             . . c c 6 6 7 1 1 1 1 1 6 c . . 
             . . . c c c c c c c c c c . . . 
             `],
-        500,
+        200,
         true
         )
     }
