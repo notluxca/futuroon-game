@@ -8,11 +8,9 @@
  * Bandeira no Final do Mapa: Quando o jogador toca em uma parte específica do sprite da bandeira posicionada no final do mapa, a vitória é registrada.
  */
 /**
- * Aqui está a reescrita com uma visão mais geral e didática:
- * 
  * Nesta parte inicial do jogo, configuramos elementos essenciais para o funcionamento básico e a ambientação.
  * 
- * Primeiramente, criamos o jogador e definimos que ele será controlado pelo analógico. Também configuramos a câmera para seguir o jogador, garantindo que ele permaneça sempre no centro da tela durante o gameplay.
+ * Criamos o jogador e definimos que ele será controlado pelo analógico. Também configuramos a câmera para seguir o jogador, garantindo que ele permaneça sempre no centro da tela durante o gameplay.
  * 
  * Além disso, carregamos o background que compõe o cenário e o TileMap, que define o mapa por onde o personagem pode se movimentar.
  * 

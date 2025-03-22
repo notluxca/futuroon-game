@@ -1,0 +1,12 @@
+{
+    "image1": {
+        "data": "hwQUABAAAAARER8R8R8REfH////xHx8fHxH/////8fH///8R8f///xER///x8RER8R//EfH///8REf///x8REf////HxH///H///H///EREREf/x8f///x//////HxER////EfEf//H/8v/x8R8RES8i/////////yLyERH///EvIv/x8f/xH//y/xER//8f////////8R//////////8f//////////",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "devs Easter egg"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
