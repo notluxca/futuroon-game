@@ -86,7 +86,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Jogador.isHittingTile(CollisionDirection.Bottom)) {
         music.play(music.createSoundEffect(WaveShape.Square, 400, 600, 255, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
-        Jogador.vy = -240
+        Jogador.vy = -140
     }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -848,7 +848,7 @@ Jogador = sprites.create(img`
     `, SpriteKind.Player)
 controller.moveSprite(Jogador, 90, 0)
 Jogador.setPosition(106, 120)
-Jogador.ay = 1200
+Jogador.ay = 400
 cameraOffsetScene.cameraFollowWithOffset(Jogador, 0, -15)
 animation.runImageAnimation(
 Jogador,
